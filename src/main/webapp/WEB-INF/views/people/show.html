@@ -9,13 +9,24 @@
 <body>
 <p th:text="${person.getName()}">name</p>
 <p th:text="${'Email: ' + person.getEmail()}">email</p>
-<p th:text="${'ID: ' + person.getId()}">id</p>
+<p th:text="${'ID: ' + person.getPerson_id()}">id</p>
 
-<a th:href="@{/people/{id}/edit(id=${person.getId()})}">Edit</a>
+<a th:href="@{/people/{id}/edit(id=${person.getPerson_id()})}">Edit</a>
 
-<form th:method="DELETE" th:action="@{/people/{id}(id=${person.getId()})}">
+<form th:method="DELETE" th:action="@{/people/{id}(id=${person.getPerson_id()})}">
     <br/>
     <input type="submit" value="Delete.">
+    <br/>
+    <hr/>
+    <div th:if="${books.isEmpty()}">
+        <p th:text="${'Member has not any books on account'}">text</p>
+    </div>
+    <div th:unless="${books.isEmpty()}">
+        <h1>Books:</h1>
+        <div th:each="book : ${books}">
+            <p th:text="${book.getName() + ', ' + book.getAuthor() + ', ' + book.getYear()}">book</p>
+        </div>
+    </div>
 </form>
 </body>
 </html>

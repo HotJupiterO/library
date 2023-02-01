@@ -1,16 +1,13 @@
 package library.dao;
 
 
+import library.models.Book;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import library.models.Person;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,4 +53,9 @@ public class PersonDAO {
         jdbcTemplate.update("delete from person where person_id=?", id);
     }
 
+    public List<Book> takenBooks(int id) {
+        List<Book> books = jdbcTemplate.query("select * from book where person_id=?", new Object[]{id},
+                new BeanPropertyRowMapper<>(Book.class));
+        return books;
+    }
 }

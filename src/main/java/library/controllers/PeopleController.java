@@ -2,7 +2,7 @@ package library.controllers;
 
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,15 +15,11 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/people")
+@AllArgsConstructor
 public class PeopleController {
     private final PersonDAO personDAO;
     private final PersonValidator personValidator;
 
-    @Autowired
-    public PeopleController(PersonDAO personDAO, PersonValidator personValidator) {
-        this.personDAO = personDAO;
-        this.personValidator = personValidator;
-    }
 
     @GetMapping()
     public String index(Model model) {
@@ -31,15 +27,16 @@ public class PeopleController {
         return "people/index";
     }
 
+    @GetMapping("/new")
+    public String newPerson(@ModelAttribute Person person) {
+        return "people/new";
+    }
+
     @GetMapping("/{id}")
     public String show(@PathVariable int id, Model model) {
         model.addAttribute("person", personDAO.show(id));
+        model.addAttribute("books", personDAO.takenBooks(id));
         return "people/show";
-    }
-
-    @GetMapping("/new")
-    public String newPerson(@ModelAttribute("person") Person person) {
-        return "people/new";
     }
 
     @PostMapping()
@@ -52,7 +49,7 @@ public class PeopleController {
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") int id) {
+    public String edit(Model model, @PathVariable int id) {
         model.addAttribute("person", personDAO.show(id));
         return "people/edit";
     }
