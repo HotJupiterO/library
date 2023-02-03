@@ -39,8 +39,9 @@ public class BooksController {
     public String show(@PathVariable int id, Model model) {
         model.addAttribute("book", bookDAO.show(id));
         model.addAttribute("people", bookDAO.getListOfMembers());
-        model.addAttribute("hasMember", bookDAO.hasMember(id));
+        model.addAttribute("isTaken", bookDAO.isTaken(id));
         model.addAttribute("person", new Person());
+        model.addAttribute("person_with_book", bookDAO.giveMemberOfTheBook(id));
         bookDAO.show(id);
         return "books/show";
     }
@@ -49,7 +50,12 @@ public class BooksController {
     public String giveToMember(@ModelAttribute("person") Person person,
                                @PathVariable int id) {
         bookDAO.setMemberToBook(person, id);
-        System.out.println(person.getPerson_id());
+        return "redirect:/books/{id}";
+    }
+
+    @PostMapping("/{id}/getBack")
+    public String getBack(@PathVariable int id) {
+        bookDAO.removeMember(id);
         return "redirect:/books/{id}";
     }
 

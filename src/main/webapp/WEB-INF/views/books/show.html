@@ -8,13 +8,16 @@
 </head>
 <body>
 <p th:text="${book.getName() + ', ' + book.getAuthor() + ', ' + book.getYear()}">name</p>
-<!--<p th:text="${'Author: ' + book.getAuthor()}">author</p>-->
-<!--<p th:text="${'Year: ' + book.getYear()}">year</p>-->
-<div th:if="hasMember">
 
+<div th:if="${isTaken}">
+    <form th:method="POST" th:action="@{/books/{id}/getBack(id=${book.getBook_id()})}">
+        <h1 th:text="${'Book taken by ' + person_with_book}">Book takes</h1>
+        <label for="butt">Put the book back to library</label>
+        <input id="butt" type="submit" value="Put">
+    </form>
 </div>
 
-<div >
+<div th:unless="${isTaken}">
     <form th:method="POST" th:action="@{/books/{id}(id=${book.getBook_id()})}">
         <label for="person">Choose person</label>
         <select th:object="${person}" th:field="*{person_id}" id="person">
@@ -25,8 +28,6 @@
         <input type="submit" value="Give the book"/>
     </form>
 </div>
-
-
 
 <hr/>
 <a th:href="@{/books/{id}/edit(id=${book.getBook_id()})}">Edit</a>

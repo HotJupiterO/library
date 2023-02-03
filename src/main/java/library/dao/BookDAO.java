@@ -16,6 +16,7 @@ public class BookDAO {
 
     private final JdbcTemplate jdbcTemplate;
 
+
     public List<Book> index() {
         return jdbcTemplate.query("select * from book",
                 new BeanPropertyRowMapper<>(Book.class));
@@ -43,8 +44,8 @@ public class BookDAO {
                 .orElse(null);
     }
 
-    public boolean hasMember(int id) {
-        return jdbcTemplate.query("select * from book where book_id=? and person_id=null",
+    public boolean isTaken(int id) {
+        return !jdbcTemplate.query("select * from book where book_id=? and person_id is not null ",
                 new Object[]{id}, new BeanPropertyRowMapper<>(Book.class)).isEmpty();
     }
 
@@ -52,15 +53,19 @@ public class BookDAO {
         return jdbcTemplate.query("select * from person", new BeanPropertyRowMapper<>(Person.class));
     }
 
-    public void setMemberToBook(int person_id, int book_id) {
-        jdbcTemplate.update("update book set person_id=? where book_id=?", person_id, book_id);
-    }
     public void setMemberToBook(Person person, int book_id) {
         jdbcTemplate.update("update book set person_id=? where book_id=?", person.getPerson_id(), book_id);
     }
 
-    public void removeMemberFromTheBook(int book_id) {
-        jdbcTemplate.update("update book set person_id=? where book_id=?", null, book_id);
+    public void removeMember(int book_id) {
+        jdbcTemplate.update("update book set person_id=null where book_id=?", book_id);
+    }
+
+    public String giveMemberOfTheBook(int book_id) {
+        String sql = "select person_id from book where book_id=?";
+        Integer index = jdbcTemplate.queryForObject(sql, new Object[]{book_id}, Integer.class);
+        PersonDAO personDAO = new PersonDAO(jdbcTemplate);
+        return index == null ? null : personDAO.show(index).getName();
     }
 
 }
