@@ -22,6 +22,7 @@
 *.iml
 *.iws
 
+src/main/resources/database.properties
 
 # Maven
 log/
