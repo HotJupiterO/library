@@ -16,6 +16,9 @@
     <input type="text" th:field="*{email}" id="email">
     <div style="color: crimson" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
     <br/>
+    <label for="age">Enter age: </label>
+    <input type="text" th:field="*{age}" id="age">
+    <br/>
     <input type="submit" value="Create.">
 </form>
 </body>
